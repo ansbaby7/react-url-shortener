@@ -1,10 +1,10 @@
-import logo from './logo.svg'
-import './App.css'
+import Shortener from './Shortener'
 
 function App() {
 
   return (
-    <div className="App">
+    <div className="bg-slate-800 h-screen">
+      <Shortener/>
       </div>
   )
 }
