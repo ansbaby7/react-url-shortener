@@ -1,10 +1,33 @@
+import axios from "axios";
 import React, {useState, useEffect } from "react";
 import CopyToClipboard from "react-copy-to-clipboard";
 
 const LinkResult = ({inputText}) => {
     console.log(inputText);
-  const [shortLink, setShortLink] = useState("Hello");
+  const [shortLink, setShortLink] = useState("");
   const [copied,setCopied] = useState(false);
+  const [error,setError] = useState(false);
+  const [isLoading,setIsLoading] = useState(false);
+
+  const fetchResult = async () => {
+      try {
+          setIsLoading(true);
+          const res = await axios(`https://api.shrtco.de/v2/shorten?url=${inputText}`);
+          //console.log(res);
+          setShortLink(res.data.result.full_short_link);
+        //   console.log(res.data.result.full_short_link);
+      } catch (err){
+            setError(err);
+      } finally {
+          setIsLoading(false);
+      }
+  }
+
+  useEffect(()=>{
+    if(inputText.length) {
+        fetchResult();
+      }
+  },[inputText])
 
   useEffect(()=>{
       const timer = setTimeout(()=> {
@@ -12,11 +35,20 @@ const LinkResult = ({inputText}) => {
       },2000);
 
       return ()=> clearTimeout(timer)
-  },[copied])
+  },[copied]);
+
+  if(isLoading){
+    return <p className="text-gray-200 text-[1rem]">Loading...</p>
+  }
+  if(error){
+    return <p className="text-gray-200 text-[1rem]">Oops! Something went wrong.</p>
+  }
 
   return (
-    <div className="flex justify-between items-center py-2 px-4">
-      <p className="text-white bg-slate-800 w-48 rounded-l-[3px] py-2 px-4 ">
+      <> 
+      {shortLink&& (
+       <div className="flex justify-between items-center py-2 px-4">
+      <p className="text-white bg-slate-800 w-56 rounded-l-[3px] py-2 px-4 ">
         {shortLink}
       </p>
       <CopyToClipboard text={shortLink} onCopy={() => setCopied(true)}>
@@ -38,7 +70,9 @@ const LinkResult = ({inputText}) => {
           </svg>
         </button>
       </CopyToClipboard>
-    </div>
+    </div> )}
+    </>
+
   );
 };
 
