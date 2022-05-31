@@ -10,7 +10,7 @@ const Shortener = ({setInputText}) => {
     <div className="min-h-[10vh] text-center">
 
       <h1 className="text-5xl md:text-6xl py-6 text-gray-200">
-        URL <span className="uppercase">Shortner</span>
+        URL <span className="uppercase">Shortener</span>
       </h1>
 
       <div className="flex mb-8">
